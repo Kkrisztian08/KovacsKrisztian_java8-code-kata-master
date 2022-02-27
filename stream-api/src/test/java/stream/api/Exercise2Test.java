@@ -68,7 +68,7 @@ public class Exercise2Test extends ClassicOnlineStore {
         /**
          * Create a stream with distinct age values using {@link Stream#distinct}
          */
-        Stream<Integer> distinctAgeStream = null;
+        Stream<Integer> distinctAgeStream = customerList.stream().map(customer -> customer.getAge()).distinct();
 
         List<Integer> distinctAgeList = distinctAgeStream.collect(Collectors.toList());
         assertThat(distinctAgeList, contains(22, 27, 28, 38, 26, 32, 35, 21, 36));
@@ -82,8 +82,8 @@ public class Exercise2Test extends ClassicOnlineStore {
          * Create a stream with items' names stored in {@link Customer.wantToBuy}
          * Use {@link Stream#flatMap} to create a stream from each element of a stream.
          */
-        Function<Customer, Stream<Item>> getItemStream = null;
-        Stream<String> itemStream = null;
+        Function<Customer, Stream<Item>> getItemStream = customer -> customer.getWantToBuy().stream();
+        Stream<String> itemStream = customerList.stream().flatMap(customer -> getItemStream.apply(customer).map(item -> item.getName()));
 
         assertTrue(AssertUtil.isLambda(getItemStream));
         List<String> itemList = itemStream.collect(Collectors.toList());
